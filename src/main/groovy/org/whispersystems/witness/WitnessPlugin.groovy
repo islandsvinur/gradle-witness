@@ -4,6 +4,8 @@ import org.gradle.api.InvalidUserDataException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.ResolvedArtifact
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import java.security.MessageDigest
 
@@ -12,6 +14,8 @@ class WitnessPluginExtension {
 }
 
 class WitnessPlugin implements Plugin<Project> {
+
+    private final Logger logger = LoggerFactory.getLogger(WitnessPlugin.class)
 
     static String calculateSha256(file) {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -35,7 +39,7 @@ class WitnessPlugin implements Plugin<Project> {
                         return it.name.equals(name) && it.moduleVersion.id.group.equals(group)
                     }
 
-                    println "Verifying " + group + ":" + name
+                    logger.info "Verifying " + group + ":" + name
 
                     if (dependency == null) {
                         throw new InvalidUserDataException("No dependency for integrity assertion found: " + group + ":" + name)
